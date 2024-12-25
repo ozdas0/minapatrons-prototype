@@ -1,49 +1,198 @@
+/* styles.module.css */
 .container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #ece9e6 0%, #f4f4f4 100%);
-  padding: 2rem;
-  font-family: "Roboto", sans-serif;
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(to bottom right, #e0eafc, #cfdef3);
+  margin: 0 auto;
+  max-width: 1000px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .header {
+  padding: 3rem 0; /* More padding */
   text-align: center;
-  margin-bottom: 3rem;
-  animation: fadeIn 2s ease-in-out;
 }
 
 .title {
-  font-size: 4rem;
-  color: #2c3e50;
-  margin: 0;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
 }
 
 .description {
-  font-size: 1.5rem;
-  color: #34495e;
-  margin-top: 1rem;
+  font-size: 1.25rem;
+  color: #555;
+  line-height: 1.7; /* Improved line height */
+  max-width: 700px;
+  margin: 0 auto; /* Center the description */
 }
 
 .main {
-  width: 100%;
-  max-width: 500px;
-  animation: slideUp 1.5s ease-in-out;
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Align hero content vertically */
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 3rem; /* Add some padding to the bottom of main */
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Slightly less transparent background */
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  max-width: 700px; /* Wider hero container*/
+  transition: transform 0.3s ease-in-out; /* Add transition for hover */
+}
+
+.hero:hover {
+  transform: scale(1.02); /* Subtle scale on hover */
+}
+
+.heroTitle {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.heroSubtitle {
+  font-size: 1.15rem;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.callToAction {
+  display: inline-block;
+  padding: 1.2rem 2.5rem; /* Slightly larger button */
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px; /* More rounded corners */
+  font-size: 1.2rem;
+  font-weight: 500; /* Slightly bolder font-weight */
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More defined shadow */
+}
+
+.callToAction:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px); /* More pronounced lift on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between input groups */
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.inputGroup input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.inputGroup input:focus {
+  border-color: #007bff; /* Highlight on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+.createButton {
+  padding: 0.75rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createButton:hover {
+  background-color: #0056b3;
+}
+
+.posts {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, 1fr)
+  ); /* Responsive grid */
+  gap: 1.5rem;
+}
+
+.post {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s; /* Add transition for hover effect */
+}
+
+.post:hover {
+  transform: translateY(-5px); /* Lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+}
+
+.post h2 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.price {
+  color: #777;
+  margin-bottom: 1rem;
 }
 
 .imageWrapper {
   position: relative;
-  display: inline-block;
+  overflow: hidden; /* Prevents overlay from overflowing rounded corners */
+  border-radius: 8px; /* Match post border radius */
+  margin-bottom: 1rem;
 }
 
 .image {
-  width: 300px;
-  height: 200px;
-  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  display: block; /* Prevents a small gap at the bottom of the image */
+  border-radius: 8px;
+  object-fit: cover;
+  aspect-ratio: 16/9;
 }
 
 .overlay {
@@ -57,82 +206,52 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-  font-size: 18px;
+  font-size: 1.2rem;
   font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
 }
 
-.searchForm {
-  display: flex;
-  border: 2px solid #ddd;
-  border-radius: 50px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+.imageWrapper:hover .overlay {
+  opacity: 1;
 }
 
-.searchForm:hover {
-  transform: scale(1.05);
-}
-
-.searchInput {
-  flex: 1;
-  padding: 0.75rem 1rem;
+.buyButton {
+  padding: 0.6rem 1rem;
+  background-color: #2ecc71; /* Green buy button */
+  color: white;
   border: none;
+  border-radius: 4px;
   font-size: 1rem;
-  outline: none;
-  background-color: #f9f9f9;
-  color: #2c3e50;
-}
-
-.searchButton {
-  background-color: #1abc9c;
-  border: none;
-  border-radius: "5px";
-  padding: "10px 20px";
-  color: "#fff";
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
-.searchButton:hover {
-  background-color: #16a085;
-  transform: translateY(-2px);
+.buyButton:hover {
+  background-color: #27ae60;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+@media (max-width: 768px) {
+  .hero {
+    padding: 2rem;
   }
-  to {
-    opacity: 1;
-  }
-}
 
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
+  .heroTitle {
+    font-size: 1.75rem;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  .heroSubtitle {
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 600px) {
   .title {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 
-  .description {
-    font-size: 1.2rem;
-  }
-
-  .searchForm {
-    max-width: 100%;
+  .posts {
+    grid-template-columns: 1fr;
   }
 }
