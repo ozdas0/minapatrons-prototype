@@ -1,12 +1,12 @@
 "use client";
-import { PublicKey } from "../../../contracts/src/minapatrons.js";
+import { PublicKey } from "../../../contracts/build/src/minapatrons";
 import { useEffect, useState } from "react";
-import "./reactCOIServiceWorker";
+import "../reactCOIServiceWorker";
 import styles from "../styles/Home.module.css";
-import ZkappWorkerClient from "./zkappWorkerClient";
+import ZkappWorkerClient from "../zkappWorkerClient";
 import axios from "axios";
 
-const zkappAddress = "B62qooGF2urAxPhvs6ufW99zA3wifkHx1d1SbEwwBaW8vn3jWUj2Fys";
+const zkappAddress = "B62qnqkDn5RHhWVC3PStcw6V18FjZtTzdsGw7UXEo8pgET54BPmgkff";
 const transactionFee = 0;
 
 export default function Home() {
@@ -23,17 +23,18 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [unlockedPosts, setUnlockedPosts] = useState<string[]>([]);
   const [formData, setFormData] = useState({
-    postId: "",
-    price: "",
-    contentName: "",
+    ContentName: "",
+    ContentData: "",
+    pk: "",
     nullifier: "",
-    privateKey: "",
-    image: null as File | null,
+    price: "",
   });
 
   useEffect(() => {
     const setupZkApp = async () => {
-      const { PublicKey } = await import("../../../contracts/src/minapatrons");
+      const { PublicKey } = await import(
+        "../../../contracts/build/src/minapatrons"
+      );
       if (!state.hasBeenSetup) {
         const zkappWorkerClient = new ZkappWorkerClient();
         await zkappWorkerClient.setActiveInstanceToDevnet();
@@ -61,13 +62,14 @@ export default function Home() {
           zkappPublicKey,
         });
 
-        const unlockedData = await axios.get("/api/get_content.ts", {
+        /* const unlockedData = await axios.get("/api/get_content.ts", {
           params: { publickey: state.publicKey!.toBase58() },
         });
         setUnlockedPosts(unlockedData.data.map((post: any) => post.id));
+        */
       }
     };
-    fetchPosts();
+    // fetchPosts();
     setupZkApp();
   }, [state]);
 
@@ -92,26 +94,20 @@ export default function Home() {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append("postId", formData.postId);
       formDataToSend.append("price", formData.price);
-      formDataToSend.append("contentName", formData.contentName);
+      formDataToSend.append("ContentName", formData.ContentName);
       formDataToSend.append("nullifier", formData.nullifier);
-      formDataToSend.append("privateKey", formData.privateKey);
-      if (formData.image) formDataToSend.append("image", formData.image);
+      formDataToSend.append("pk", formData.pk);
+      formDataToSend.append("ContentData", formData.ContentData);
 
-      await axios.post("/api/add_content", formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.post("/api/add_contents", formDataToSend);
 
       setFormData({
-        postId: "",
-        price: "",
-        contentName: "",
+        ContentName: "",
+        ContentData: "",
+        pk: "",
         nullifier: "",
-        privateKey: "",
-        image: null,
+        price: "",
       });
 
       fetchPosts();
@@ -153,53 +149,75 @@ export default function Home() {
       <h1 className={styles.title}>MINAPATRONS</h1>
 
       <form className={styles.form} onSubmit={handleCreatePost}>
-        <input
-          type="text"
-          name="price"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="contentName"
-          placeholder="Content Name"
-          value={formData.contentName}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="nullifier"
-          placeholder="Nullifier"
-          value={formData.nullifier}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="privateKey"
-          placeholder="Private Key"
-          value={formData.privateKey}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleInputChange}
-          required
-        />
-        <button type="submit">Create Post</button>
+        <div className={styles.inputGroup}>
+          <label htmlFor="price">Price</label>
+          <input
+            type="text"
+            name="price"
+            id="price"
+            placeholder="Enter Price"
+            value={formData.price}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="ContentName">Content Name</label>
+          <input
+            type="text"
+            name="ContentName"
+            id="ContentName"
+            placeholder="Enter Content Name"
+            value={formData.ContentName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="nullifier">Nullifier</label>
+          <input
+            type="text"
+            name="nullifier"
+            id="nullifier"
+            placeholder="Enter Nullifier"
+            value={formData.nullifier}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="pk">Private Key</label>
+          <input
+            type="text"
+            name="pk"
+            id="pk"
+            placeholder="Enter Private Key"
+            value={formData.pk}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="ContentData">Content Data</label>
+          <input
+            type="text"
+            name="ContentData"
+            placeholder="Content Data"
+            value={formData.ContentData}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button type="submit" className={styles.createButton}>
+          Create Post
+        </button>
       </form>
 
       <div className={styles.posts}>
         {posts.map((post: any) => (
           <div key={post.id} className={styles.post}>
             <h2>{post.contentName}</h2>
-            <p>Price: {post.price}</p>
+            <p className={styles.price}>Price: {post.price}</p>
             {post.image && (
               <div className={styles.imageWrapper}>
                 <img
@@ -215,7 +233,10 @@ export default function Home() {
               </div>
             )}
             {!unlockedPosts.includes(post.id) && (
-              <button onClick={() => handleBuyPost(post.id, post.price)}>
+              <button
+                className={styles.buyButton}
+                onClick={() => handleBuyPost(post.id, post.price)}
+              >
                 Buy & Unlock
               </button>
             )}
