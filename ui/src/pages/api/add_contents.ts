@@ -3,6 +3,27 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { dbConfig } from "./db_config";
 import { generateUniqueId } from "./utils";
 
+const {
+Mina,
+PublicKey,
+Field,
+UInt64,
+PrivateKey,
+MinaPatron,
+offchainState,
+} = await import("../../../../contracts/build/src/minapatrons.js");
+const Network = Mina.Network("https://api.minascan.io/node/devnet/v1/graphql");
+console.log("Devnet network instance configured");
+Mina.setActiveInstance(Network);
+
+console.time("compile program");
+await offchainState.compile();
+minapatron_contract.offchainState.setContractClass(MinaPatron);
+console.timeEnd("compile program");
+console.time("compile contract");
+await MinaPatron.compile();
+console.timeEnd("compile contract");
+
 // POST /api/add_contents
 export default async function handler(
 req: NextApiRequest,
@@ -12,7 +33,7 @@ if (req.method === "POST") {
 try {
 const connection = await mysql.createConnection(dbConfig);
 await connection.beginTransaction();
-const { contentName, contentData, ic } = req.body;
+const { contentName, contentData, pk, nullifier, price } = req.body;
 const id = generateUniqueId();
 await connection.execute(
 `
