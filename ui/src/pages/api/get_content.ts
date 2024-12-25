@@ -2,16 +2,14 @@ import mysql from "mysql2/promise";
 import { NextApiRequest, NextApiResponse } from "next";
 import { dbConfig } from "./db_config";
 
-//   add offchainState idea like interact.ts for proving
-
 const {
-  Mina,
-  PublicKey,
-  Field,
-  UInt64,
-  PrivateKey,
-  MinaPatron,
-  offchainState,
+Mina,
+PublicKey,
+Field,
+UInt64,
+PrivateKey,
+MinaPatron,
+offchainState,
 } = await import("../../../../contracts/build/src/minapatrons.js");
 const Network = Mina.Network("https://api.minascan.io/node/devnet/v1/graphql");
 console.log("Devnet network instance configured");
@@ -28,38 +26,37 @@ console.timeEnd("compile program");
 console.time("compile contract");
 await MinaPatron.compile();
 console.timeEnd("compile contract");
-
 // GET /api/get_content
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+req: NextApiRequest,
+res: NextApiResponse
 ) {
-  if (req.method === "GET") {
-    try {
-      const connection = await mysql.createConnection(dbConfig);
-      const contentId = req.query.id;
+if (req.method === "GET") {
+try {
+const connection = await mysql.createConnection(dbConfig);
+const contentId = req.query.id;
 
-      if (typeof contentId !== "string") {
-        return res.status(400).json({ error: "Invalid contentId" });
-      }
+if (typeof contentId !== "string") {
+return res.status(400).json({ error: "Invalid contentId" });
+}
 
-      const contentIdField = Field(contentId);
+const contentIdField = Field(contentId);
 
-      const bought = minapatron_contract.isBought(contentIdField);
-      if (!bought) {
-        return res.status(400).json({ error: "Content is not bought" });
-      }
-      const [content] = await connection.execute(
-        `SELECT * FROM contents WHERE id = ?`,
-        [contentId]
-      );
-      res.send(content);
-    } catch (error) {
-      console.error("Error getting content:", error);
-      res.status(500).json({ error: "Error getting content" });
-    }
-  } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+const bought = await minapatron_contract.isBought(contentIdField);
+if (!bought) {
+return res.status(400).json({ error: "Content is not bought" });
+}
+const [content] = await connection.execute(
+`SELECT * FROM contents WHERE id = ?`,
+[contentId]
+);
+res.send(content);
+} catch (error) {
+console.error("Error getting content:", error);
+res.status(500).json({ error: "Error getting content" });
+}
+} else {
+res.setHeader("Allow", ["GET"]);
+res.status(405).end(`Method ${req.method} Not Allowed`);
+}
 }
