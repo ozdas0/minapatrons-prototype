@@ -34,7 +34,13 @@ try {
 const connection = await mysql.createConnection(dbConfig);
 await connection.beginTransaction();
 const { contentName, contentData, pk, nullifier, price } = req.body;
-const id = generateUniqueId();
+  const id = generateUniqueId();
+  const nullifierField = Field(nullifier)
+  const idField = Field(id)
+  const ic = IdentityCommitment.createCommitment(pk, nullifierField )
+  const priceUInt64 = new UInt64(price)
+  const newPost = new Post.createPost(ic, priceUInt64)
+  const newContent = await Minapatrons.createContent(idField)
 await connection.execute(
 `
 INSERT INTO contents (id, contentName, contentData)
