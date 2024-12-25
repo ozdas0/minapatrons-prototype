@@ -1,3 +1,3 @@
-import { Add } from './Add.js';
+import { MinaPatron } from './minapatrons.js';
 
-export { Add };
+export { MinaPatron };

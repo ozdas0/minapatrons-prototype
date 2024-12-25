@@ -1,4 +1,23 @@
 {
   "version": 1,
-  "deployAliases": {}
+  "deployAliases": {
+    "minapatrons": {
+      "networkId": "testnet",
+      "url": "https://api.minascan.io/node/devnet/v1/graphql",
+      "keyPath": "keys/minapatrons.json",
+      "feepayerKeyPath": "/Users/suleymanozdas/.cache/zkapp-cli/keys/myfeepayer.json",
+      "feepayerAlias": "myfeepayer",
+      "fee": "0.0",
+      "smartContract": "MinaPatron"
+    },
+    "devnet": {
+      "networkId": "testnet",
+      "url": "https://api.minascan.io/node/devnet/v1/graphql",
+      "keyPath": "keys/devnet.json",
+      "feepayerKeyPath": "/Users/suleymanozdas/.cache/zkapp-cli/keys/asdasd.json",
+      "feepayerAlias": "asdasd",
+      "fee": "0.1",
+      "smartContract": "MinaPatron"
+    }
+  }
 }
