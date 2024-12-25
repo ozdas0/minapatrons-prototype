@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import Link from "next/link";
 
 export default function Welcome() {
   const router = useRouter();
@@ -27,9 +28,15 @@ export default function Welcome() {
         </header>
 
         <main className={styles.main}>
-          <button onClick={handleNavigation} className={styles.searchButton}>
-            Go to MINAPATRONS
-          </button>
+          <div className={styles.hero}>
+            <h2 className={styles.heroTitle}>Welcome to MINAPATRONS</h2>
+            <p className={styles.heroDescription}>
+              Your platform to support and explore content creators.
+            </p>
+            <Link href="/home" legacyBehavior>
+              <a className={styles.callToAction}>Explore MINAPATRONS</a>
+            </Link>
+          </div>
         </main>
       </div>
     </>
