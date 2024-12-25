@@ -1,28 +1,20 @@
-import {
-  MinaPatron,
-  Mina,
-  IdentityCommitment,
-  Post,
-} from "../../../contracts/build/src/minapatrons.js";
-
-import { fetchAccount } from "o1js";
+import { fetchAccount, Mina, PublicKey, Field, PrivateKey, UInt64 } from "o1js";
 
 import * as Comlink from "comlink";
+import { MinaPatron } from "../../contracts/build/src/minapatrons";
 
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 const state = {
-  MinaPatron: null as null | typeof MinaPatron,
+  MinaPatronInstance: null as null | typeof MinaPatron,
   zkappInstance: null as null | MinaPatron,
   transaction: null as null | Transaction,
   offchainState: null as null | any,
-  IdentityCommitment: null as null | typeof IdentityCommitment,
-  Post: null as null | typeof Post,
 };
 
 export const api: any = {
   async setActiveInstanceToDevnet() {
-    const { Mina } = await import("../../../contracts/src/minapatrons");
+    const { Mina } = await import("../../contracts/build/src/minapatrons");
     const Network = Mina.Network(
       "https://api.minascan.io/node/devnet/v1/graphql"
     );
@@ -30,34 +22,28 @@ export const api: any = {
     Mina.setActiveInstance(Network);
   },
   async loadContract() {
-    const { MinaPatron } = await import("../../../contracts/src/minapatrons");
-    const { IdentityCommitment } = await import(
-      "../../../contracts/src/minapatrons"
+    const { MinaPatron } = await import(
+      "../../contracts/build/src/minapatrons.js"
     );
-    const { Post } = await import("../../../contracts/src/minapatrons");
-    state.MinaPatron = MinaPatron;
-    state.IdentityCommitment = IdentityCommitment;
-    state.Post = Post;
+    state.MinaPatronInstance = MinaPatron;
   },
   async compileContract() {
-    await state.MinaPatron!.compile();
+    await state.MinaPatronInstance!.compile();
     await state.offchainState!.compile();
   },
   async fetchAccount(publicKey58: string) {
-    const { PublicKey } = await import("../../../contracts/src/minapatrons");
     const publicKey = PublicKey.fromBase58(publicKey58);
     return fetchAccount({ publicKey });
   },
 
   async fetchPrice(postId: string) {
-    const { Field } = await import("../../../contracts/src/minapatrons");
     const post = await state.offchainState!.posts(Field(postId));
     return { price: post.price.toString() };
   },
 
   async createIdentityCommitment(privateKey: string, nullifier: string) {
-    const { Field, PrivateKey, IdentityCommitment } = await import(
-      "../../../contracts/src/minapatrons"
+    const { IdentityCommitment } = await import(
+      "../../contracts/build/src/minapatrons"
     );
     const identityCommitment = IdentityCommitment.createCommitment(
       PrivateKey.fromBase58(privateKey),
@@ -67,18 +53,18 @@ export const api: any = {
   },
 
   async initZkappInstance(publicKey58: string) {
-    const { PublicKey } = await import("../../../contracts/src/minapatrons");
+    const { MinaPatron } = await import(
+      "../../contracts/build/src/minapatrons"
+    );
     const publicKey = PublicKey.fromBase58(publicKey58);
-    state.zkappInstance = new state.MinaPatron!(publicKey);
+    state.zkappInstance = new MinaPatron(publicKey);
+    state.offchainState = state.zkappInstance.offchainState;
   },
   async createBuyTransaction(
     postId: string,
     price: string,
     senderPublicKey: string
   ) {
-    const { Mina, PublicKey, Field } = await import(
-      "../../../contracts/src/minapatrons"
-    );
     const sender = PublicKey.fromBase58(senderPublicKey);
     state.transaction = await Mina.transaction(
       { sender: sender, fee: price },
@@ -93,8 +79,9 @@ export const api: any = {
     privateKey: string,
     nullifier: string
   ) {
-    const { Mina, Field, UInt64, PrivateKey, IdentityCommitment, Post } =
-      await import("../../../contracts/src/minapatrons");
+    const { IdentityCommitment, Post } = await import(
+      "../../contracts/build/src/minapatrons"
+    );
     // create IdentityCommitment from ic, create Post from price and IdentiyCommitment.
     const identityCommitment = IdentityCommitment.createCommitment(
       PrivateKey.fromBase58(privateKey),
@@ -113,9 +100,6 @@ export const api: any = {
     nullifier: string,
     receiver: string
   ) {
-    const { Mina, PublicKey, Field, PrivateKey } = await import(
-      "../../../contracts/src/minapatrons"
-    );
     state.transaction = await Mina.transaction(async () => {
       await state.zkappInstance!.withdrawRevenue(
         PrivateKey.fromBase58(privateKey),
@@ -133,4 +117,6 @@ export const api: any = {
   },
 };
 
-Comlink.expose(api);
+if (typeof window !== "undefined") {
+  Comlink.expose(api);
+}
